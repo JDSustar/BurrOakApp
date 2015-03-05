@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.util.*;
+import android.os.Debug;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -23,8 +25,49 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        Log.d("Lifecycle", "App has been Created!");
+        Debug.startMethodTracing();
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Log.d("Lifecycle", "App has started!");
+
+        int j = 1;
+        for(int i = 0; i < 100000 ; i++)
+        {
+            j += j;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Lifecycle", "App has resumed!");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle", "App has stopped!");
+        Debug.stopMethodTracing();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("Lifecycle", "App has be destroyed!");
+        super.onDestroy();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle", "App has been paused!");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
