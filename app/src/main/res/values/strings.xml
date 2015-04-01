@@ -4,5 +4,9 @@
     <string name="app_name">BurrOakApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_view_marina_information">Marina Information</string>
+    <string name="title_activity_hiking_information">HikingInformation</string>
+    <string name="title_activity_event_information">EventInformation</string>
+    <string name="title_activity_lodging_information">LodgingInformation</string>
 
 </resources>

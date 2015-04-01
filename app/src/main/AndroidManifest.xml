@@ -19,6 +19,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MarinaInformation"
+            android:label="@string/title_activity_view_marina_information"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.burroakapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".HikingInformation"
+            android:label="@string/title_activity_hiking_information"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.burroakapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".EventInformation"
+            android:label="@string/title_activity_event_information"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.burroakapp.MainActivity" />
+        </activity>
+        <activity
+            android:name=".LodgingInformation"
+            android:label="@string/title_activity_lodging_information"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.burroakapp.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

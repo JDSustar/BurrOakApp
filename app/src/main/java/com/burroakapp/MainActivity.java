@@ -1,5 +1,6 @@
 package com.burroakapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -105,5 +106,25 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
+    }
+
+    public void viewHikingInformation(View view){
+        Intent intent = new Intent(this,HikingInformation.class);
+        startActivity(intent);
+    }
+
+    public void viewMarinaInformation(View view){
+        Intent intent = new Intent(this,MarinaInformation.class);
+        startActivity(intent);
+    }
+
+    public void viewEventInformation(View view){
+        Intent intent = new Intent(this,EventInformation.class);
+        startActivity(intent);
+    }
+
+    public void viewLodgingInformation(View view){
+        Intent intent = new Intent(this,LodgingInformation.class);
+        startActivity(intent);
     }
 }
