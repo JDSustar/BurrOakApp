@@ -25,6 +25,22 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    public Trail getTrail(int id)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_TRAILS + " WHERE Id = " + id;
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst())
+        {
+            return new Trail(id, c.getString(1), c.getDouble(2));
+        }
+
+        return null;
+    }
+
     public List<Trail> getTrails()
     {
         SQLiteDatabase db = getReadableDatabase();
@@ -51,7 +67,7 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         List<TrailCheckpoint> checkpoints = new ArrayList<TrailCheckpoint>();
 
         String query = "SELECT * FROM " + TABLE_TRAIL_CHECKPOINTS + " WHERE TrailId = " + trailId
-                + "ORDER BY Order";
+                + " ORDER BY 'Order'";
 
         Cursor c = db.rawQuery(query, null);
 
@@ -60,8 +76,8 @@ public class DatabaseHelper extends SQLiteAssetHelper {
             do {
                 TrailCheckpoint t = new TrailCheckpoint(
                         c.getInt(c.getColumnIndex("Order")),
-                        c.getDouble(c.getColumnIndex("Latitude")),
-                        c.getDouble(c.getColumnIndex("Longitude")),
+                        c.getFloat(c.getColumnIndex("Latitude")),
+                        c.getFloat(c.getColumnIndex("Longitude")),
                         trailId);
                 checkpoints.add(t);
             } while (c.moveToNext());

@@ -71,7 +71,11 @@
         </activity>
         <activity
             android:name=".TrailMap"
-            android:label="@string/title_activity_trail_map" >
+            android:label="@string/title_activity_trail_map"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.burroakapp.MainActivity" />
         </activity>
     </application>
 

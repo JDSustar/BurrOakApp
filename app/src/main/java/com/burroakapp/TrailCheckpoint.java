@@ -6,15 +6,15 @@ package com.burroakapp;
 public class TrailCheckpoint {
     int _order;
     int _trailId;
-    double _longitude;
-    double _latitude;
+    float _longitude;
+    float _latitude;
 
     public TrailCheckpoint()
     {
 
     }
 
-    public TrailCheckpoint(int order, double latitude, double longitude, int trailId) {
+    public TrailCheckpoint(int order, float latitude, float longitude, int trailId) {
         this._order = order;
         this._latitude = latitude;
         this._longitude = longitude;
@@ -29,11 +29,11 @@ public class TrailCheckpoint {
         return _trailId;
     }
 
-    public double get_longitude() {
+    public float get_longitude() {
         return _longitude;
     }
 
-    public double get_latitude() {
+    public float get_latitude() {
         return _latitude;
     }
 }

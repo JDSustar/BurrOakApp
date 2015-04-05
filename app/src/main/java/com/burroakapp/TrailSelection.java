@@ -34,6 +34,7 @@ public class TrailSelection extends ActionBarActivity {
                 System.out.println(trailSelected.toString());
 
                 Intent i = new Intent(TrailSelection.this, TrailMap.class);
+                i.putExtra("TRAILID", trailSelected.get_id());
 
                 startActivity(i);
             }
