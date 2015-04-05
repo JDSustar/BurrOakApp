@@ -2,7 +2,6 @@ package com.burroakapp;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.util.*;
 import android.os.Debug;
 
@@ -36,12 +34,6 @@ public class MainActivity extends ActionBarActivity {
     {
         super.onStart();
         Log.d("Lifecycle", "App has started!");
-
-        int j = 1;
-        for(int i = 0; i < 100000 ; i++)
-        {
-            j += j;
-        }
     }
 
     @Override
@@ -109,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void viewHikingInformation(View view){
-        Intent intent = new Intent(this,HikingInformation.class);
+        Intent intent = new Intent(this,TrailSelection.class);
         startActivity(intent);
     }
 
