@@ -1,5 +1,6 @@
 package com.burroakapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,8 +33,9 @@ public class TrailSelection extends ActionBarActivity {
 
                 System.out.println(trailSelected.toString());
 
+                Intent i = new Intent(TrailSelection.this, TrailMap.class);
 
-                //TODO SEND INTENT TO MAP WITH TRAIL ID
+                startActivity(i);
             }
         });
     }

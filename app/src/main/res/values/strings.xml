@@ -8,5 +8,6 @@
     <string name="title_activity_hiking_information">HikingInformation</string>
     <string name="title_activity_event_information">EventInformation</string>
     <string name="title_activity_lodging_information">LodgingInformation</string>
+    <string name="title_activity_trail_map">TrailMap</string>
 
 </resources>
