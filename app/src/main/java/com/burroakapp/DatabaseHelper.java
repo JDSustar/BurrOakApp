@@ -1,5 +1,6 @@
 package com.burroakapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,7 +8,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +24,10 @@ public class DatabaseHelper extends SQLiteAssetHelper {
 
     private static final String TABLE_TRAILS = "trails";
     private static final String TABLE_TRAIL_CHECKPOINTS = "trailCheckpoints";
+    private static final String TABLE_NOTES = "notes";
+
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
 
     public DatabaseHelper(Context context)
     {
@@ -84,5 +93,57 @@ public class DatabaseHelper extends SQLiteAssetHelper {
         }
 
         return checkpoints;
+    }
+
+    public List<TrailNote> getTrailNotes(int trailId)
+    {
+        SQLiteDatabase db = getReadableDatabase();
+        List<TrailNote> notes = new ArrayList<TrailNote>();
+
+        String query = "SELECT * FROM " + TABLE_NOTES + " WHERE TrailId = " + trailId;
+
+        Cursor c = db.rawQuery(query, null);
+
+        if(c.moveToFirst())
+        {
+            do {
+                Date date;
+
+                try
+                {
+                    date = DATE_FORMAT.parse(c.getString(c.getColumnIndex("Date")));
+                }
+                catch (ParseException e)
+                {
+                    date = new Date();
+                }
+
+                TrailNote t = new TrailNote(
+                        c.getInt(c.getColumnIndex("TrailId")),
+                        date,
+                        c.getString(c.getColumnIndex("Note")),
+                        c.getFloat(c.getColumnIndex("Latitude")),
+                        c.getFloat(c.getColumnIndex("Longitude")));
+
+                notes.add(t);
+            } while (c.moveToNext());
+        }
+
+        return notes;
+    }
+
+    public void writeTrailNote(TrailNote note)
+    {
+        ContentValues values = new ContentValues();
+        values.put("TrailId", note.get_trailId());
+        values.put("Date", DATE_FORMAT.format(note.get_date()));
+        values.put("Note", note.get_note());
+        values.put("Latitude", note.get_latitude());
+        values.put("Longitude", note.get_longitude());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_NOTES, null, values);
+        db.close();
     }
 }
