@@ -32,6 +32,7 @@ public class EventInformation extends ListActivity {
     ArrayList<String> locations;
     ArrayList<String> descriptions;
     ArrayList<String> links;
+    ArrayList<RSSItem> rssItems;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class EventInformation extends ListActivity {
         locations = new ArrayList<String>();
         descriptions = new ArrayList<String>();
         links = new ArrayList<String>();
+        rssItems = new ArrayList<RSSItem>();
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -90,6 +92,14 @@ public class EventInformation extends ListActivity {
 
             boolean insideItem = false;
 
+            String title = null;
+            String date = null;
+            String startTime = null;
+            String endTime = null;
+            String link = null;
+            String location = null;
+            String description = null;
+
             // Returns the type of current event: START_TAG, END_TAG, etc..
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -100,51 +110,65 @@ public class EventInformation extends ListActivity {
                     } else if (xpp.getName().equals("title")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                headlines.add(xpp.getText()); //extract the headline
+                                //headlines.add(xpp.getText()); //extract the headline
+                                title = xpp.getText();
                             }
 
                     } else if (xpp.getName().equals("link")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                links.add(xpp.getText()); //extract the link of article
+                                //links.add(xpp.getText()); //extract the link of article
+                                link = xpp.getText();
                             }
                     }
                     else if (xpp.getName().equals("description")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                descriptions.add(xpp.getText()); //extract the link of article
+                                //descriptions.add(xpp.getText()); //extract the link of article
+                                description = xpp.getText();
                             }
                     }
                     else if (xpp.getName().equals("date")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                dates.add(xpp.getText()); //extract the link of article
+                                //dates.add(xpp.getText()); //extract the link of article
+                                date = xpp.getText();
                             }
                     }
                     else if (xpp.getName().equals("startTime")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                startTimes.add(xpp.getText()); //extract the link of article
+                                //startTimes.add(xpp.getText()); //extract the link of article
+                                startTime = xpp.getText();
                             }
                     }
                     else if (xpp.getName().equals("endTime")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                endTimes.add(xpp.getText()); //extract the link of article
+                                //endTimes.add(xpp.getText()); //extract the link of article
+                                endTime = xpp.getText();
                             }
                     }
                     else if (xpp.getName().equals("location")) {
                         if (insideItem)
                             if (xpp.next() == XmlPullParser.TEXT) {
-                                locations.add(xpp.getText()); //extract the link of article
+                                //locations.add(xpp.getText()); //extract the link of article
+                                location = xpp.getText();
                             }
                     }
                 } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("item")) {
                     insideItem = false;
+                    rssItems.add(new RSSItem(title,date,startTime,endTime,link,location,description));
                 }
 
                 eventType = xpp.next(); //move to next element
             }
+            /*String gethere = "WTF";
+            for(int i=0;i<headlines.size();i++)
+            {
+                rssItems.add(new RSSItem(headlines.get(i),dates.get(i),startTimes.get(i),endTimes.get(i),links.get(i),
+                        locations.get(i),descriptions.get(i)));
+            }*/
 
         }catch (MalformedURLException e) {
              e.printStackTrace();
@@ -155,8 +179,8 @@ public class EventInformation extends ListActivity {
         }
 
         // Binding data
-        ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, headlines);
+        ArrayAdapter<RSSItem> adapter = new ArrayAdapter<RSSItem>(this,
+                android.R.layout.simple_list_item_1, rssItems);
 
         ListView lv = getListView();
         lv.setAdapter(adapter);
