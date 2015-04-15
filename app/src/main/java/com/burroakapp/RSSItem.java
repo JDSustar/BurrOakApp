@@ -21,4 +21,60 @@ public class RSSItem {
         this.location = location;
         this.description = description;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String givenTitle) {
+        title = givenTitle;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String givenDate) {
+        date = givenDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String givenStartTime) {
+        startTime = givenStartTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String givenEndTime) {
+        endTime = givenEndTime;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String givenLink) {
+        link = givenLink;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String givenLocation) {
+        location = givenLocation;
+    }
+
+    public String getDescription() {
+        return title;
+    }
+
+    public void setDescription(String givenDescription) {
+        description = givenDescription;
+    }
 }

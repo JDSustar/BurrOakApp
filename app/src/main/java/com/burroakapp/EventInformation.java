@@ -163,12 +163,11 @@ public class EventInformation extends ListActivity {
 
                 eventType = xpp.next(); //move to next element
             }
-            /*String gethere = "WTF";
             for(int i=0;i<headlines.size();i++)
             {
                 rssItems.add(new RSSItem(headlines.get(i),dates.get(i),startTimes.get(i),endTimes.get(i),links.get(i),
                         locations.get(i),descriptions.get(i)));
-            }*/
+            }
 
         }catch (MalformedURLException e) {
              e.printStackTrace();
@@ -179,11 +178,13 @@ public class EventInformation extends ListActivity {
         }
 
         // Binding data
-        ArrayAdapter<RSSItem> adapter = new ArrayAdapter<RSSItem>(this,
-                android.R.layout.simple_list_item_1, rssItems);
+        setListAdapter(new RSSItemAdapter(this,rssItems));
 
-        ListView lv = getListView();
-        lv.setAdapter(adapter);
+
+        /*RSSItemAdapter adapter = new RSSItemAdapter(this, rssItems);
+// Attach the adapter to a ListView
+        ListView listView = (ListView) findViewById(R.id.myEventList);
+        listView.setAdapter(adapter);*/
 
 
     }
