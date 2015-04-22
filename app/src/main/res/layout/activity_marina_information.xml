@@ -10,24 +10,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/marinaLabel"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is some sample text that will be replaced with the actual information about the Marina"
+        android:text="@string/marina_information"
         android:id="@+id/marinaInformationTextView"
-        android:layout_below="@+id/marinaLabel"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="32dp" />
+        android:layout_below="@+id/marinaLabel" />
 
     <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:id="@+id/imageView"
         android:src="@mipmap/marina"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@+id/marinaInformationTextView"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
