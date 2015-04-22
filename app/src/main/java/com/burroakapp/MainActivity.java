@@ -78,9 +78,4 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this,EventInformation.class);
         startActivity(intent);
     }
-
-    public void viewLodgingInformation(View view){
-        Intent intent = new Intent(this,LodgingInformation.class);
-        startActivity(intent);
-    }
 }
