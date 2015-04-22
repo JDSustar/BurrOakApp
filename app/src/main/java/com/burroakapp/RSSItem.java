@@ -35,6 +35,11 @@ public class RSSItem implements Comparable{
         this.link = link;
         this.location = location;
         this.description = description;
+
+        if(startTime.compareTo("All Day") == 0)
+        {
+            this.endTime = " ";
+        }
     }
 
     public String getTitle() {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class EventInformation extends ListActivity {
+public class EventInformation extends ActionBarActivity {
     ArrayList<String> headlines;
     ArrayList<String> dates;
     ArrayList<String> startTimes;
@@ -52,12 +53,36 @@ public class EventInformation extends ListActivity {
         descriptions = new ArrayList<String>();
         links = new ArrayList<String>();
         rssItems = new ArrayList<RSSItem>();
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        parseRSSFeed("http://burroak.org/feed/my-calendar-rss");
 
+        new EventLoader().execute();
+    }
+
+    private class EventLoader extends AsyncTask<Void, Void, List<RSSItem>> {
+
+        @Override
+        protected List<RSSItem> doInBackground(Void... params) {
+            return parseRSSFeed("http://burroak.org/feed/my-calendar-rss");
+        }
+
+        @Override
+        protected void onPostExecute (List<RSSItem> list)
+        {
+            ListView lw = (ListView) findViewById(R.id.eventListView);
+            lw.setAdapter(new RSSItemAdapter(EventInformation.this, list));
+            lw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Uri uri = Uri.parse(rssItems.get(position).getLink());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
 
@@ -83,7 +108,7 @@ public class EventInformation extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void parseRSSFeed(String givenURL) {
+    public List<RSSItem> parseRSSFeed(String givenURL) {
         // Initializing instance variables
 
         try {
@@ -109,7 +134,7 @@ public class EventInformation extends ListActivity {
                 });
 
                 d.show();
-                return;
+                return null;
             }
 
             xpp.setInput(stream, "UTF_8");
@@ -181,7 +206,7 @@ public class EventInformation extends ListActivity {
         Collections.sort(rssItems);
 
         // Binding data
-        setListAdapter(new RSSItemAdapter(this, rssItems));
+        return rssItems;
     }
 
     private void removeOldEvents()
@@ -208,12 +233,4 @@ public class EventInformation extends ListActivity {
             return null;
         }
     }
-
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Uri uri = Uri.parse(rssItems.get(position).getLink());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-    }
-
 }

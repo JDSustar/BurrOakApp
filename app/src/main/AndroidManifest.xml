@@ -60,16 +60,9 @@
                 android:value="com.burroakapp.MainActivity" />
         </activity>
         <activity
-            android:name=".LodgingInformation"
-            android:label="@string/title_activity_lodging_information"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.burroakapp.MainActivity" />
-        </activity>
-        <activity
             android:name=".TrailMap"
             android:label="@string/title_activity_trail_map"
+            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
