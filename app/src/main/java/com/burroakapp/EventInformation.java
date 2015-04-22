@@ -1,6 +1,8 @@
 package com.burroakapp;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,6 +24,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 
 public class EventInformation extends ListActivity {
@@ -77,8 +83,7 @@ public class EventInformation extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void parseRSSFeed(String givenURL)
-    {
+    public void parseRSSFeed(String givenURL) {
         // Initializing instance variables
 
         try {
@@ -89,7 +94,25 @@ public class EventInformation extends ListActivity {
             XmlPullParser xpp = factory.newPullParser();
 
             // Get the XML from an input stream
-            xpp.setInput(getInputStream(url), "UTF_8");
+            InputStream stream = getInputStream(url);
+            if(stream == null)
+            {
+                AlertDialog.Builder d = new AlertDialog.Builder(EventInformation.this);
+                d.setTitle("No Connection");
+                d.setMessage("Event List could not be retrieved.");
+
+                d.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EventInformation.this.finish();
+                    }
+                });
+
+                d.show();
+                return;
+            }
+
+            xpp.setInput(stream, "UTF_8");
 
             boolean insideItem = false;
 
@@ -140,12 +163,12 @@ public class EventInformation extends ListActivity {
                     }
                 } else if (eventType == XmlPullParser.END_TAG && xpp.getName().equals("item")) {
                     insideItem = false;
-                    rssItems.add(new RSSItem(title,date,startTime,endTime,link,location,description));
+                    rssItems.add(new RSSItem(title, date, startTime, endTime, link, location, description));
                 }
 
                 eventType = xpp.next(); //move to next element
             }
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -153,8 +176,29 @@ public class EventInformation extends ListActivity {
             e.printStackTrace();
         }
 
+        removeOldEvents();
+
+        Collections.sort(rssItems);
+
         // Binding data
-        setListAdapter(new RSSItemAdapter(this,rssItems));
+        setListAdapter(new RSSItemAdapter(this, rssItems));
+    }
+
+    private void removeOldEvents()
+    {
+        List<RSSItem> removeList = new ArrayList<RSSItem>();
+        for(RSSItem i : rssItems)
+        {
+            if(i.getDate().compareTo(new Date()) < 0)
+            {
+                removeList.add(i);
+            }
+        }
+
+        for(RSSItem remove : removeList)
+        {
+            rssItems.remove(remove);
+        }
     }
 
     public InputStream getInputStream(URL url) {

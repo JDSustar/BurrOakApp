@@ -46,7 +46,7 @@ public class RSSItemView extends RelativeLayout {
 
     public void setItem(RSSItem rssItem) {
         titleTextView.setText(rssItem.getTitle());
-        dateTextView.setText(rssItem.getDate());
+        dateTextView.setText(RSSItem.DATE_FORMAT.format(rssItem.getDate()));
         startTimeTextView.setText(rssItem.getStartTime());
         endTimeTextView.setText(rssItem.getEndTime());
     }

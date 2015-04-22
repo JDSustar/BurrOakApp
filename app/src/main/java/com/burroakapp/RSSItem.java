@@ -1,11 +1,18 @@
 package com.burroakapp;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Jim on 4/3/2015.
  */
-public class RSSItem {
+public class RSSItem implements Comparable{
+    public static DateFormat DATE_FORMAT = new SimpleDateFormat("MMMM dd, yyyy");
+
     private String title;
-    private String date;
+    private Date date;
     private String startTime;
     private String endTime;
     private String link;
@@ -14,7 +21,15 @@ public class RSSItem {
 
     public RSSItem(String title, String date, String startTime, String endTime, String link, String location, String description){
         this.title = title;
-        this.date = date;
+
+        try {
+            this.date = DATE_FORMAT.parse(date);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
         this.startTime = startTime;
         this.endTime = endTime;
         this.link = link;
@@ -30,11 +45,11 @@ public class RSSItem {
         title = givenTitle;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String givenDate) {
+    public void setDate(Date givenDate) {
         date = givenDate;
     }
 
@@ -76,5 +91,17 @@ public class RSSItem {
 
     public void setDescription(String givenDescription) {
         description = givenDescription;
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        RSSItem anotherItem = (RSSItem)another;
+
+        if(anotherItem == null)
+        {
+            throw new ClassCastException();
+        }
+
+        return this.getDate().compareTo(anotherItem.getDate());
     }
 }

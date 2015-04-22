@@ -1,12 +1,16 @@
 package com.burroakapp;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -50,7 +54,31 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_trail_map);
+
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (!isConnected) {
+            AlertDialog.Builder d = new AlertDialog.Builder(TrailMap.this);
+            d.setTitle("No Connection");
+            d.setMessage("A data connection is required for this feature.");
+
+            d.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    TrailMap.this.finish();
+                }
+            });
+
+            d.show();
+        }
+
 
         Intent intent = getIntent();
         trailId = intent.getIntExtra("TRAILID", -1);
@@ -60,13 +88,12 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
         new LoadMarkers().execute();
     }
 
-    private class LoadMarkers extends AsyncTask<Void, Void, List<TrailNote>>{
+    private class LoadMarkers extends AsyncTask<Void, Void, List<TrailNote>> {
 
         @Override
         protected List<TrailNote> doInBackground(Void... params) {
@@ -77,8 +104,7 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
         }
 
         protected void onPostExecute(List<TrailNote> notes) {
-            for(TrailNote note : notes)
-            {
+            for (TrailNote note : notes) {
                 map.addMarker(new MarkerOptions().snippet(note.get_note()).title(DatabaseHelper.DATE_FORMAT.format(note.get_date()))
                         .position(new LatLng(note.get_latitude(), note.get_longitude())));
             }
@@ -92,12 +118,10 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
                 .build();
     }
 
-    private void plotCheckpoints()
-    {
+    private void plotCheckpoints() {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(checkpoints.get(0)._latitude, checkpoints.get(0)._longitude), 15));
 
-        for(int i = 0; i < checkpoints.size() - 1; i++)
-        {
+        for (int i = 0; i < checkpoints.size() - 1; i++) {
             TrailCheckpoint cp1 = checkpoints.get(i);
             TrailCheckpoint cp2 = checkpoints.get(i + 1);
 
@@ -142,6 +166,7 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
         if (id == R.id.save_note) {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
             // Create a criteria object to retrieve provider
             Criteria criteria = new Criteria();
 
@@ -151,12 +176,20 @@ public class TrailMap extends ActionBarActivity implements OnMapReadyCallback {
             // Get Current Location
             Location myLocation = locationManager.getLastKnownLocation(provider);
 
-            Intent intent = new Intent(this, SaveNote.class);
-            intent.putExtra("TRAILID", trailId);
-            intent.putExtra("NOTELATITUDE", (float)myLocation.getLatitude());
-            intent.putExtra("NOTELONGITUDE", (float)myLocation.getLongitude());
+            if (myLocation != null) {
+                Intent intent = new Intent(this, SaveNote.class);
+                intent.putExtra("TRAILID", trailId);
+                intent.putExtra("NOTELATITUDE", (float) myLocation.getLatitude());
+                intent.putExtra("NOTELONGITUDE", (float) myLocation.getLongitude());
 
-            startActivity(intent);
+                startActivity(intent);
+            } else {
+                AlertDialog.Builder d = new AlertDialog.Builder(TrailMap.this);
+                d.setTitle("Current Location Unavailable");
+                d.setMessage("Your current location is currently unavailable, which is required to save a note. Please try again later.");
+                d.setCancelable(true);
+                d.show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
